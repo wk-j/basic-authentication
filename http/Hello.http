@@ -1,2 +1,10 @@
 GET http://localhost:5000/api/secure/sayHello
 Authorization: Basic admin admin
+
+###
+GET http://localhost:5000/api/secure/sayHello
+Authorization: Basic YWRtaW46YWRtaW4=
+
+###
+GET http://localhost:5000/api/secure/sayHello
+Authorization: Basic xxx

@@ -14,16 +14,17 @@ namespace BasicAuthentication.Attributes {
         public void OnAuthorization(AuthorizationFilterContext context) {
             string au = context.HttpContext.Request.Headers["Authorization"];
             if (au != null && au.StartsWith("Basic ")) {
-                // Get the encoded username and password
                 var encodedUsernamePassword = au.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries)[1]?.Trim();
-                // Decode from Base64 to string
-                var decodedUsernamePassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword));
-                // Split username and password
-                var username = decodedUsernamePassword.Split(':', 2)[0];
-                var password = decodedUsernamePassword.Split(':', 2)[1];
-                // Check if login is correct
-                if (IsAuthorized(username, password)) {
-                    return;
+                try {
+                    var decodedUsernamePassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword));
+                    var username = decodedUsernamePassword.Split(':', 2)[0];
+                    var password = decodedUsernamePassword.Split(':', 2)[1];
+                    if (IsAuthorized(username, password)) {
+                        return;
+                    }
+                } catch (Exception _) {
+                    context.HttpContext.Response.Headers["WWW-Authenticate"] = "Basic";
+                    context.Result = new UnauthorizedResult();
                 }
             }
             // Return authentication type (causes browser to show login dialog)
