@@ -1,0 +1,2 @@
+GET http://localhost:5000/api/secure/sayHello
+Authorization: Basic admin admin
